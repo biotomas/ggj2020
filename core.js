@@ -7,15 +7,14 @@ var coin;
 const items = {
 	WALL: "#",
 	PLAYER: "@",
-	BOX: "$",
-	COIN: ".",
-	FLOOR: " ",
+	BOX: "b",
+	FLOOR: ".",
 	ENEMY: "E",
 	FRAGILE_FLOOR: "x",
-	HOLE: "X",
+	HOLE: "_",
 	MACHINE: "A",
 	PART: "a",
-	UNDEF: "-",
+	BOX_IN_HOLE: "+"
 };
 
 const moves = {
@@ -43,6 +42,7 @@ function loadLevel(levstr) {
 	var eloc = level.find(items.ENEMY);
 	if (eloc) {
 		enemy = new Spider(eloc.x, eloc.y);
+		level.grid[eloc.y][eloc.x] = items.FLOOR;
 	} else {
 		enemy = null;
 	}
@@ -71,20 +71,21 @@ function step(move) {
 			return;
 	}
 
-	hero.moveTo(gx, gy);
-	if (hero.update()) {
-		return;
-	}
-	if (enemy) {
-		var gex = enemy.x - gx + cx;
-		var gey = enemy.y - gy + cy;
-		enemy.moveTo(gex, gey);
-		if (enemy.update()) {
+	if (hero.moveTo(gx, gy)) {
+		if (hero.update()) {
 			return;
 		}
-	}
-	if (hero.checkwin()) {
-		return;
+		if (enemy) {
+			var gex = enemy.x - gx + cx;
+			var gey = enemy.y - gy + cy;
+			enemy.moveTo(gex, gey);
+			if (enemy.update()) {
+				return;
+			}
+		}
+		if (hero.checkwin()) {
+			return;
+		}
 	}
 };
 
@@ -95,15 +96,19 @@ class BaseGO {
 	}
 
 	moveTo(x, y) {
+		if (x < 0 || y < 0 || x >= level.width || y >= level.heigth) {
+			return false;
+		}
+
 		var oldx = this.x;
 		var oldy = this.y;
 		var nextx = 2 * x - oldx;
 		var nexty = 2 * y - oldy;
 		var isPlayer = oldx == hero.x && oldy == hero.y;
-		
+
 		const goalTile = level.grid[y][x];
 		// walk to other floor
-		if (goalTile == items.FLOOR || goalTile == items.FRAGILE_FLOOR) {
+		if (goalTile == items.FLOOR || goalTile == items.FRAGILE_FLOOR || goalTile == items.BOX_IN_HOLE) {
 			this.x = x;
 			this.y = y;
 			level.collapse(oldx, oldy);
@@ -129,9 +134,8 @@ class BaseGO {
 			return true;
 		}
 
-
 		// push box to floor
-		if (goalTile == items.BOX && level.grid[nexty][nextx] == items.FLOOR) {
+		if (goalTile == items.BOX && (level.grid[nexty][nextx] == items.FLOOR || level.grid[nexty][nextx] == items.BOX_IN_HOLE)) {
 			level.grid[nexty][nextx] = items.BOX;
 			level.grid[y][x] = items.FLOOR;
 			level.grid[oldy][oldx] = items.FLOOR;
@@ -141,7 +145,7 @@ class BaseGO {
 		}
 		// push box to hole
 		if (goalTile == items.BOX && level.grid[nexty][nextx] == items.HOLE) {
-			level.grid[nexty][nextx] = items.FLOOR;
+			level.grid[nexty][nextx] = items.BOX_IN_HOLE;
 			level.grid[y][x] = items.FLOOR;
 			level.grid[oldy][oldx] = items.FLOOR;
 			this.x = x;
