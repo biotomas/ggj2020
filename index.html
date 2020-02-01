@@ -1,29 +1,49 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <title>SpaceShip Repairer</title>
-</head>
-
-<body style="width:1100px">
-  <div><audio id="mainSound" src="soundtracks/Main_Sound.mp3"></audio></div>
-  <div style="text-align:center">
-    <h1>SpaceShip Repairer</h1>
-    <p>Use arrows to move, "r" restarts the level. Repair your SpaceShip!</p>
-    <canvas id="canvas" width="1000" height="520" style="border:1px solid red;" onclick="playMainSound()"></canvas>
-    <br></br>
-    Select Level to play:&nbsp;&nbsp;&nbsp;
-    <select id="levelSelect" onchange="selectLevel()">
-    </select>
-    <p>Level Editor:</p>
-    <textarea id="customLevel" rows=10 cols=20 oninput="restartLevel()">
-</textarea>
-  </div>
-
-  <script src="levels.js"></script>
-  <script src="core.js"></script>
-  <script src="gui.js"></script>
-  <script src="sound.js"></script>
-</body>
-
+  <head>
+    <title>Rescue of Providence</title>
+    <link rel="stylesheet" type="text/css" href ="stylesheet.css" />
+  </head>
+  <body>
+    <div class="step_invitation" onclick="displayIntro()">
+      <p>Click here to start...</p>
+    </div>
+    <div class="step_intro" onclick="introSound()">
+      <section class="intro">
+        In a not so distant future, in our galaxy ....
+      </section>
+      <audio id="introSound" src="soundtracks/Intro.mp3"></audio>
+      <!-- Change the text to your liking -->
+      <div id="board">
+        <div id="content">
+          <p id="title">Rescue of Providence</p>
+          <p id="subtitle">THE LAST STAND</p>
+          <br>
+          <!-- And make it cheesy ! -->
+          <p>You have accepted the last challenge of horrible master "Destroypoculus" terrorizing the entire sector HIP-356679 of our galaxy.
+            This is the very last chance to repair the "Providence Spaceship" transporting crucial provisions and to save the planet Earth.</p>
+        </div>
+        <script src="handler.js"></script>
+      </div>
+    </div>
+    <div class="step_running">
+      <audio id="mainSound" src="soundtracks/Main_Sound.mp3" loop="loop"></audio>
+      <div>
+        <h1>Rescue of Providence</h1>
+        <p>Use arrows to move, "r" restarts the level. Repair defect Spaceship Providence and Save the Planet!</p>
+        <canvas id="canvas" width="1000" height="520" onclick="playMainSound()"></canvas>
+        <br>
+        Select Level to play:&nbsp;&nbsp;&nbsp;
+        <select id="levelSelect" onchange="selectLevel()">
+        </select>
+        <p>Level Editor:</p>
+        <textarea id="customLevel" rows=10 cols=20 oninput="restartLevel()"></textarea>
+      </div>
+    </div>
+    <script src="levels.js"></script>
+    <script src="intro.js"></script>
+    <script src="core.js"></script>
+    <script src="gui.js"></script>
+    <script src="sound.js"></script>
+  </body>
 </html>
