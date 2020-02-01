@@ -1,0 +1,13 @@
+.step_running {
+    width:1100px;
+}
+
+.step_running div:last-child {
+    text-align:center;
+}
+
+.step_running canvas {
+    width:1000;
+    height:520px;
+    border:1px solid red;
+}
