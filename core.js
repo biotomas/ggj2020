@@ -71,20 +71,21 @@ function step(move) {
 			return;
 	}
 
-	hero.moveTo(gx, gy);
-	if (hero.update()) {
-		return;
-	}
-	if (enemy) {
-		var gex = enemy.x - gx + cx;
-		var gey = enemy.y - gy + cy;
-		enemy.moveTo(gex, gey);
-		if (enemy.update()) {
+	if (hero.moveTo(gx, gy)) {
+		if (hero.update()) {
 			return;
 		}
-	}
-	if (hero.checkwin()) {
-		return;
+		if (enemy) {
+			var gex = enemy.x - gx + cx;
+			var gey = enemy.y - gy + cy;
+			enemy.moveTo(gex, gey);
+			if (enemy.update()) {
+				return;
+			}
+		}
+		if (hero.checkwin()) {
+			return;
+		}
 	}
 };
 
@@ -104,7 +105,7 @@ class BaseGO {
 		var nextx = 2 * x - oldx;
 		var nexty = 2 * y - oldy;
 		var isPlayer = oldx == hero.x && oldy == hero.y;
-		
+
 		const goalTile = level.grid[y][x];
 		// walk to other floor
 		if (goalTile == items.FLOOR || goalTile == items.FRAGILE_FLOOR || goalTile == items.BOX_IN_HOLE) {
