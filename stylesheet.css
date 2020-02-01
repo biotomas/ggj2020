@@ -7,7 +7,5 @@
 }
 
 .step_running canvas {
-    width:1000;
-    height:520px;
     border:1px solid red;
 }
