@@ -10,6 +10,19 @@ body {
     background-color: white;
 }
 
+.step_invitation {
+    position: absolute;
+    top: 35%;
+    left:35%;
+    text-align: center;
+    font-size: 50pt;
+    cursor: pointer;
+}
+
+.step_intro {
+    display: none;
+}
+
 /* Set the animation, color, size and hide the text */
 .intro {
     position: absolute;

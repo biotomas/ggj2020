@@ -24,3 +24,9 @@ function introSound() {
     document.getElementById("introSound").play();
 }
 
+function displayIntro() {
+    document.getElementsByClassName("step_invitation").item(0).style.display="none";
+    document.getElementsByClassName("step_intro").item(0).style.display="block";
+    document.getElementsByClassName("step_intro").item(0).click();
+}
+
