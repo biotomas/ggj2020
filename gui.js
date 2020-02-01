@@ -17,8 +17,6 @@ function heroDead() {
 function restartLevel() {
   console.log("called restart");
   loadLevel(document.getElementById("customLevel").value);
-  canvas.height = (level.heigth - 1) * gridSize;
-  canvas.width = level.width * gridSize;
   draw();
 }
 
@@ -121,42 +119,73 @@ floorImage = new Image;
 floorImage.src = 'res/floor.png';
 unstableFloorImage = new Image;
 unstableFloorImage.src = 'res/unstable-floor.png';
+backgroundImage = new Image;
+backgroundImage.src = 'res/space-background.jpg';
+cogImage = new Image;
+cogImage.src = 'res/machine-part.png';
+machineImage = new Image;
+machineImage.src = 'res/machine.png';
 
 var canvas = document.getElementById("canvas");
 var c = canvas.getContext("2d");
 const gridSize = 60;
+var offx = 0;
+var offy = 0;
 
 function draw() {
   // draw the map
-  c.clearRect(0, 0, canvas.width, canvas.height);
+  c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+  offx = canvas.width / 2 - hero.x * gridSize;
+  offy = canvas.height / 2 - hero.y * gridSize;
+
+
   for (var y = 0; y < level.grid.length; y++) {
     var ln = level.grid[y];
     for (var x = 0; x < ln.length; x++) {
-      if (level.grid[y][x] == items.FRAGILE_FLOOR) {
-        c.drawImage(unstableFloorImage, x * gridSize, y * gridSize);
-      } else if (level.grid[y][x] == items.HOLE) {
-        //draw nothing
-      } else {
-        c.drawImage(floorImage, x * gridSize, y * gridSize);
-        switch (level.grid[y][x]) {
-          case items.WALL:
-            c.drawImage(rockImage, x * gridSize, y * gridSize);
-            break;
-          case items.BOX:
-            c.drawImage(boxImage, x * gridSize, y * gridSize);
-            break;
-        }
+      switch (level.grid[y][x]) {
+        case items.FRAGILE_FLOOR:
+          drawTile(unstableFloorImage, x, y);
+          break;
+        case items.FLOOR:
+          drawTile(floorImage, x, y);
+          break;
+        case items.HOLE:
+          //draw nothing
+          break;
+        case items.MACHINE:
+          drawTile(floorImage, x, y);
+          drawTile(machineImage, x, y);
+          break;
+        case items.PART:
+          drawTile(floorImage, x, y);
+          drawTile(cogImage, x, y);
+          break;
+
+        case items.WALL:
+          drawTile(floorImage, x, y);
+          drawTile(rockImage, x, y);
+          break;
+        case items.BOX:
+          drawTile(floorImage, x, y);
+          drawTile(boxImage, x, y);
+          break;
       }
     }
   }
   drawIfPresent(coin, coinImage);
   drawIfPresent(enemy, enemyImage);
   // draw the hero
-  c.drawImage(hero.dead ? skullImage : heroImage, hero.x * gridSize, hero.y * gridSize);
+  drawTile(hero.dead ? skullImage : heroImage, hero.x, hero.y);
 }
 
 function drawIfPresent(item, img) {
   if (item) {
-    c.drawImage(img, item.x * gridSize, item.y * gridSize);
+    drawTile(floorImage, item.x, item.y);
+    drawTile(img, item.x, item.y);
   }
+}
+
+function drawTile(img, x, y) {
+  c.drawImage(img, (x * gridSize) + offx, (y * gridSize) + offy);
+
 }

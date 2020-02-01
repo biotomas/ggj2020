@@ -13,6 +13,8 @@ const items = {
 	ENEMY: "E",
 	FRAGILE_FLOOR: "x",
 	HOLE: "X",
+	MACHINE: "A",
+	PART: "a",
 	UNDEF: "-",
 };
 
@@ -29,6 +31,7 @@ function loadLevel(levstr) {
 	// levstr = document.getElementById("customLevel").value
 	level = new Level(levstr);
 	var hloc = level.find(items.PLAYER);
+	level.grid[hloc.y][hloc.x] = items.FLOOR;
 	console.log(hloc);
 	hero = new Hero(hloc.x, hloc.y);
 	var cloc = level.find(items.COIN);
@@ -94,36 +97,58 @@ class BaseGO {
 	moveTo(x, y) {
 		var oldx = this.x;
 		var oldy = this.y;
-		if (level.grid[oldy][oldx] == items.FRAGILE_FLOOR) {
-			level.collapse(oldx, oldy);
-		}
 		var nextx = 2 * x - oldx;
 		var nexty = 2 * y - oldy;
-
+		var isPlayer = oldx == hero.x && oldy == hero.y;
+		
+		const goalTile = level.grid[y][x];
 		// walk to other floor
-		if (level.grid[y][x] == items.FLOOR) {
+		if (goalTile == items.FLOOR || goalTile == items.FRAGILE_FLOOR) {
 			this.x = x;
 			this.y = y;
-			level.grid[oldy][oldx] = items.FLOOR;
+			level.collapse(oldx, oldy);
+			return true;
 		}
 
+		// pickup part
+		if (goalTile == items.PART && isPlayer) {
+			this.x = x;
+			this.y = y;
+			hero.hasPart = true;
+			level.collapse(oldx, oldy);
+			level.grid[y][x] = items.FLOOR;
+			return true;
+		}
+
+		// deliver part
+		if (goalTile == items.MACHINE && isPlayer && hero.hasPart) {
+			this.x = x;
+			this.y = y;
+			level.collapse(oldx, oldy);
+			hero.win = true;
+			return true;
+		}
+
+
 		// push box to floor
-		if (level.grid[y][x] == items.BOX && level.grid[nexty][nextx] == items.FLOOR) {
+		if (goalTile == items.BOX && level.grid[nexty][nextx] == items.FLOOR) {
 			level.grid[nexty][nextx] = items.BOX;
 			level.grid[y][x] = items.FLOOR;
 			level.grid[oldy][oldx] = items.FLOOR;
 			this.x = x;
 			this.y = y;
+			return true;
 		}
 		// push box to hole
-		if (level.grid[y][x] == items.BOX && level.grid[nexty][nextx] == items.HOLE) {
+		if (goalTile == items.BOX && level.grid[nexty][nextx] == items.HOLE) {
 			level.grid[nexty][nextx] = items.FLOOR;
 			level.grid[y][x] = items.FLOOR;
 			level.grid[oldy][oldx] = items.FLOOR;
 			this.x = x;
 			this.y = y;
+			return true;
 		}
-
+		return false;
 	}
 
 }
@@ -133,6 +158,7 @@ class Hero extends BaseGO {
 		super(x, y)
 		this.dead = false;
 		this.win = false;
+		this.hasPart = false;
 	}
 
 	checkwin() {
@@ -200,13 +226,6 @@ class Level {
 		var item = this.grid[y][x];
 		if (this.grid[y][x] == items.FRAGILE_FLOOR) {
 			this.grid[y][x] = items.HOLE;
-		}
-		if (hero.x == x && hero.y == y) {
-			die();
-			return;
-		}
-		if (enemy && enemy.x == x && enemy.y == y) {
-			enemy = null;
 		}
 	}
 }
