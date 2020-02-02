@@ -2,8 +2,8 @@ window.onload = function () {
   var select = document.getElementById("levelSelect");
   for (var i = 0; i < levels.length; i++) {
     var option = document.createElement("option");
-    option.text = "Level " + (i + 1);
-    option.value = i + 1;
+    option.text = "Level " + (i);
+    option.value = i;
     select.add(option);
   }
   this.setInterval(this.doAnimation, 10);
@@ -17,7 +17,9 @@ function heroDead() {
 
 function restartLevel() {
   console.log("called restart");
-  loadLevel(document.getElementById("customLevel").value);
+  loadLevel(document.getElementById("customLevel").value,
+  document.getElementById("offx").value,
+  document.getElementById("offy").value);
   draw();
 }
 
@@ -30,6 +32,8 @@ function nextLevel() {
   }
   document.getElementById("levelSelect").value = levelId;
   document.getElementById("customLevel").value = levels[levelId].map;
+  document.getElementById("offx").value = levels[levelId].x;
+  document.getElementById("offy").value = levels[levelId].y;
   restartLevel();
 }
 
@@ -214,7 +218,8 @@ function draw() {
   // draw the spaceship
   offx = Math.round(canvas.width / 2 - hero.ex * gridSize);
   offy = Math.round(canvas.height / 2 - hero.ey * gridSize);
-  c.drawImage(providenceImage, offx + levels[levelId].x, offy + levels[levelId].y);
+  c.drawImage(providenceImage, offx + level.shoffx, offy + level.shoffy);
+  console.log(level, level.shoffx,level.shoffy);
 
 
   for (var y = 0; y < level.grid.length; y++) {

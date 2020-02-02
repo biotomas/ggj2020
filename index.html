@@ -37,6 +37,10 @@
         <select id="levelSelect" onchange="selectLevel()">
         </select>
         <p>Level Editor:</p>
+        <div>
+          Offset X:<input id="offx" oninput="restartLevel()"></input>
+          Offset Y:<input id="offy" oninput="restartLevel()"></input>
+        </div>
         <textarea id="customLevel" rows=10 cols=20 oninput="restartLevel()"></textarea>
       </div>
     </div>

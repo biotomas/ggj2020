@@ -26,9 +26,12 @@ function die() {
 	hero.dead = true;
 }
 
-function loadLevel(levstr) {
+function loadLevel(levstr, shoffx, shoffy) {
+	console.log("load level: ", levstr, shoffx, shoffy, "loool");
 	// levstr = document.getElementById("customLevel").value
 	level = new Level(levstr);
+	level.shoffx = parseInt(shoffx, 10);
+	level.shoffy = parseInt(shoffy, 10);
 	anim.clearSprites();
 	var hloc = level.find(items.PLAYER);
 	level.grid[hloc.y][hloc.x] = items.FLOOR;

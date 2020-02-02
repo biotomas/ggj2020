@@ -1,7 +1,7 @@
 /**
  * 
  */
-var levels = [{x:0,y:300,map:`\
+var levels = [{x:-40,y:330,map:`\
 .a.
 ._.
 ._.
