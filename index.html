@@ -3,6 +3,7 @@
   <head>
     <title>Rescue of Providence</title>
     <link rel="stylesheet" type="text/css" href ="stylesheet.css" />
+    <meta name="keywords" charset="UTF-8" content="Game Jam 2020" />
   </head>
   <body onkeypress="skipIntro()">
     <div class="step_invitation" onclick="displayIntro()">
@@ -43,8 +44,27 @@
         </div>
       </div>
     </div>
+    <div class="step_outro" onclick="outroSound()">
+        <section class="outro">
+          Well done space fighter you have won!<br>
+          It was ..
+        </section>
+        <audio id="outroSound" src="soundtracks/Outro.mp3"></audio>
+        <!-- Change the text to your liking -->
+        <div id="outroBoard">
+          <div id="outroContent">
+            <p id="outroTitle">Rescue of Providence</p>
+            <p id="outroSubtitle">THE LAST STAND</p>
+            <br>
+            <!-- And make it cheesy ! -->
+            <p>You have defeated the horrible master "Destroypoculus", repaired the spaceship "providence" and saved the planet Earth.</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="levels.js"></script>
     <script src="intro.js"></script>
+    <script src="outro.js"></script>
     <script src="core.js"></script>
     <script src="gui.js"></script>
     <script src="sound.js"></script>

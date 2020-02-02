@@ -28,7 +28,8 @@ var levelId = -1;
 function nextLevel() {
   levelId++;
   if (levelId >= levels.length) {
-    // start outro
+    document.getElementById("mainSound").pause();
+    displayOutro();
     levelId = 0;
   }
   document.getElementById("levelSelect").value = levelId;
