@@ -29,7 +29,7 @@ function nextLevel() {
     levelId = 0;
   }
   document.getElementById("levelSelect").value = levelId;
-  document.getElementById("customLevel").value = levels[levelId];
+  document.getElementById("customLevel").value = levels[levelId].map;
   restartLevel();
 }
 
@@ -171,6 +171,7 @@ rockImage = loadImage('res/rock.png');
 backgroundImage = loadImage('res/space-background.jpg');
 cogImage = loadImage('res/machine-part.png');
 machineImage = loadImage('res/machine.png');
+providenceImage = loadImage('res/spaceship.png');
 //Floors
 floor_base = loadImage('res/floor-base.png');
 floor_base_weak = loadImage('res/floor-base-weak.png');
@@ -210,8 +211,10 @@ var offy = 0;
 function draw() {
   // draw the map
   c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+  // draw the spaceship
   offx = Math.round(canvas.width / 2 - hero.ex * gridSize);
   offy = Math.round(canvas.height / 2 - hero.ey * gridSize);
+  c.drawImage(providenceImage, offx + levels[levelId].x, offy + levels[levelId].y);
 
 
   for (var y = 0; y < level.grid.length; y++) {
