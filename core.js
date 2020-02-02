@@ -22,13 +22,10 @@ const moves = {
 };
 
 function die() {
-	console.log("Hero died");
 	hero.dead = true;
 }
 
 function loadLevel(levstr, shoffx, shoffy) {
-	console.log("load level: ", levstr, shoffx, shoffy, "loool");
-	// levstr = document.getElementById("customLevel").value
 	level = new Level(levstr);
 	level.shoffx = parseInt(shoffx, 10);
 	level.shoffy = parseInt(shoffy, 10);
@@ -47,7 +44,7 @@ function loadLevel(levstr, shoffx, shoffy) {
 	}
 	boxes = [];
 	level.findAll(items.BOX).forEach(e => {
-		var box = new Box(e.x,e.y);
+		var box = new Box(e.x, e.y);
 		boxes.push(box);
 		anim.addSprite(box)
 	});
@@ -75,23 +72,19 @@ function step(move) {
 		default:
 			return;
 	}
-	
+
 
 	if (hero.moveTo(gx, gy)) {
-		if (hero.update()) {
-			return false;
-		}
 		if (enemy) {
 			var gex = enemy.x - gx + cx;
 			var gey = enemy.y - gy + cy;
-			enemy.moveTo(gex, gey);
-			if (enemy.update()) {
-				return false;
+			if (!hero.update()) {
+				enemy.moveTo(gex, gey);
+				enemy.update();
 			}
 		}
-		return true;
 	}
-	return false;
+	return true;
 };
 
 class BaseGO {
@@ -150,32 +143,34 @@ class BaseGO {
 		if (goalTile == items.BOX && (level.grid[nexty][nextx] == items.FLOOR || level.grid[nexty][nextx] == items.BOX_IN_HOLE)) {
 			level.grid[nexty][nextx] = items.BOX;
 			level.grid[y][x] = items.FLOOR;
-			level.grid[oldy][oldx] = items.FLOOR;
+			//level.grid[oldy][oldx] = items.FLOOR;
 			this.x = x;
 			this.y = y;
 			// find the box
-			boxes.forEach(e=>{
+			boxes.forEach(e => {
 				if (e.x == x && e.y == y) {
 					e.x = nextx;
 					e.y = nexty;
 				}
 			})
+			level.collapse(oldx, oldy);
 			return true;
 		}
 		// push box to hole
 		if (goalTile == items.BOX && level.grid[nexty][nextx] == items.HOLE) {
 			level.grid[nexty][nextx] = items.BOX_IN_HOLE;
 			level.grid[y][x] = items.FLOOR;
-			level.grid[oldy][oldx] = items.FLOOR;
+			//level.grid[oldy][oldx] = items.FLOOR;
 			this.x = x;
 			this.y = y;
-			boxes.forEach(e=>{
+			boxes.forEach(e => {
 				if (e.x == x && e.y == y) {
 					e.x = nextx;
 					e.y = nexty;
 					e.removeBox = true;
 				}
 			})
+			level.collapse(oldx, oldy);
 			return true;
 		}
 		return false;
@@ -207,9 +202,8 @@ class Spider extends BaseGO {
 	}
 
 	update() {
-		if (this.x == hero.x && this.y == hero.y) {
+		if ((this.x == hero.x && this.y == hero.y)) {
 			die();
-			return true;
 		}
 		return false;
 	}

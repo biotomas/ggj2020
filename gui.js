@@ -11,15 +11,15 @@ window.onload = function () {
 }
 
 function heroDead() {
-  setTimeout(restartLevel, 500);
+  setTimeout(restartLevel, 1500);
 }
 
 
 function restartLevel() {
   console.log("called restart");
   loadLevel(document.getElementById("customLevel").value,
-  document.getElementById("offx").value,
-  document.getElementById("offy").value);
+    document.getElementById("offx").value,
+    document.getElementById("offy").value);
   draw();
 }
 
@@ -28,6 +28,7 @@ var levelId = -1;
 function nextLevel() {
   levelId++;
   if (levelId >= levels.length) {
+    // start outro
     levelId = 0;
   }
   document.getElementById("levelSelect").value = levelId;
@@ -66,11 +67,11 @@ function update(keycode) {
   var isFocused = (document.activeElement === inputbox);
   if (isFocused) return true;
 
-  if (hero.dead) {
-    return false;
-  }
 
   if (anim.isRunning) {
+    return false;
+  }
+  if (hero.dead) {
     return false;
   }
   var move;
@@ -147,7 +148,7 @@ function doAnimation() {
           element.ey = element.y;
           element.oldx = element.x;
           element.oldy = element.y;
-          }
+        }
       });
       draw();
     } else {
@@ -219,7 +220,7 @@ function draw() {
   offx = Math.round(canvas.width / 2 - hero.ex * gridSize);
   offy = Math.round(canvas.height / 2 - hero.ey * gridSize);
   c.drawImage(providenceImage, offx + level.shoffx, offy + level.shoffy);
-  console.log(level, level.shoffx,level.shoffy);
+  console.log(level, level.shoffx, level.shoffy);
 
 
   for (var y = 0; y < level.grid.length; y++) {
