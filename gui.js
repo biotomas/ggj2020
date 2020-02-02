@@ -28,7 +28,7 @@ var levelId = -1;
 function nextLevel() {
   levelId++;
   if (levelId >= levels.length) {
-    // start outro
+    displayOutro();
     levelId = 0;
   }
   document.getElementById("levelSelect").value = levelId;
