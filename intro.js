@@ -37,3 +37,11 @@ function displayIntro() {
     }, 36000);
 }
 
+function skipIntro() {
+    if(event.keyCode == 115){
+        document.getElementsByClassName("step_invitation").item(0).style.display="none";
+        document.getElementsByClassName("step_intro").item(0).style.display="none";
+        document.getElementsByClassName("step_running").item(0).style.display="block";
+        document.getElementById("canvas").click();
+    }
+}
