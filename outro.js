@@ -18,9 +18,4 @@ function displayOutro() {
     document.getElementsByClassName("step_running").item(0).style.display="none";
     document.getElementsByClassName("step_outro").item(0).style.display="block";
     document.getElementsByClassName("step_outro").item(0).click();
-
-    /*setTimeout(function(){
-        document.getElementsByClassName("step_outro").item(0).style.display="block";
-        document.getElementsByClassName("step_outro").item(0).click();
-    }, 30000);*/
 }
