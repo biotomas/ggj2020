@@ -28,6 +28,7 @@ var levelId = -1;
 function nextLevel() {
   levelId++;
   if (levelId >= levels.length) {
+    document.getElementById("mainSound").pause();
     displayOutro();
     levelId = 0;
   }
