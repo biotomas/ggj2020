@@ -13,12 +13,14 @@ function outroSound() {
 }
 
 function displayOutro() {
-    document.getElementsByClassName("step_invitation").item(0).style.backgroundColor="red";
+    document.getElementsByClassName("step_invitation").item(0).style.display="none";
     document.getElementsByClassName("step_intro").item(0).style.display="none";
     document.getElementsByClassName("step_running").item(0).style.display="none";
+    document.getElementsByClassName("step_outro").item(0).style.display="block";
+    document.getElementsByClassName("step_outro").item(0).click();
 
-    setTimeout(function(){
+    /*setTimeout(function(){
         document.getElementsByClassName("step_outro").item(0).style.display="block";
         document.getElementsByClassName("step_outro").item(0).click();
-    }, 30000);
+    }, 30000);*/
 }
