@@ -13,7 +13,6 @@ function outroSound() {
 }
 
 function displayOutro() {
-    //document.getElementById("mainSound").stop();
     document.getElementsByClassName("step_invitation").item(0).style.display="none";
     document.getElementsByClassName("step_intro").item(0).style.display="none";
     document.getElementsByClassName("step_running").item(0).style.display="none";
