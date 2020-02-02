@@ -32,7 +32,6 @@ function displayIntro() {
     setTimeout(function(){
         document.getElementsByClassName("step_intro").item(0).style.display="none";
         document.getElementsByClassName("step_running").item(0).style.display="block";
-        document.getElementsByTagName("body").item(0).style.backgroundColor="white";
         document.getElementById("canvas").click();
     }, 36000);
 }
