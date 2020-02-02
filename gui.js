@@ -6,6 +6,7 @@ window.onload = function () {
     option.value = i + 1;
     select.add(option);
   }
+  this.setInterval(this.doAnimation, 10);
   nextLevel();
 }
 
@@ -64,25 +65,35 @@ function update(keycode) {
   if (hero.dead) {
     return false;
   }
+
+  if (anim.isRunning) {
+    return false;
+  }
+  var move;
   switch (keycode) {
     case keys.RESTART:
       restartLevel();
       break;
     case keys.LEFT:
-      step(moves.GO_LEFT);
+      move = moves.GO_LEFT;
       break;
     case keys.RIGHT:
-      step(moves.GO_RIGHT);
+      move = moves.GO_RIGHT;
       break;
     case keys.UP:
-      step(moves.GO_UP);
+      move = moves.GO_UP;
       break;
     case keys.DOWN:
-      step(moves.GO_DOWN);
+      move = moves.GO_DOWN;
       break;
     default:
       return true;
   }
+  if (move && step(move)) {
+    // start animation
+    anim.start();
+  }
+
   if (hero.win) {
     nextLevel();
   }
@@ -97,6 +108,55 @@ document.onkeydown = function (evt) {
   evt = evt || window.event;
   return update(evt.keyCode);
 };
+
+class Animation {
+  clearSprites() {
+    this.sprites = [];
+  }
+  addSprite(item) {
+    this.sprites.push(item);
+  }
+  start() {
+    this.isRunning = true;
+    anim.startTime = Date.now();
+  }
+}
+
+var anim = new Animation();
+var frameTime = 500;
+
+function doAnimation() {
+  if (anim.isRunning) {
+    var progress = (Date.now() - anim.startTime) / frameTime;
+    if (progress > 1) {
+      //animation finished
+      anim.isRunning = false;
+      anim.sprites.forEach(element => {
+        element.ex = element.x;
+        element.ey = element.y;
+        element.oldx = element.x;
+        element.oldy = element.y;
+        if (element.removeBox) {
+          element.x = 1000;
+          element.y = 1000;
+          element.ex = element.x;
+          element.ey = element.y;
+          element.oldx = element.x;
+          element.oldy = element.y;
+          }
+      });
+      draw();
+    } else {
+      anim.sprites.forEach(element => {
+        element.ex = (element.x - element.oldx) * progress + element.oldx;
+        element.ey = (element.y - element.oldy) * progress + element.oldy;
+      });
+      draw();
+    }
+
+  }
+
+}
 
 /**
  * Graphics
@@ -150,8 +210,8 @@ var offy = 0;
 function draw() {
   // draw the map
   c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-  offx = canvas.width / 2 - hero.x * gridSize;
-  offy = canvas.height / 2 - hero.y * gridSize;
+  offx = Math.round(canvas.width / 2 - hero.ex * gridSize);
+  offy = Math.round(canvas.height / 2 - hero.ey * gridSize);
 
 
   for (var y = 0; y < level.grid.length; y++) {
@@ -166,20 +226,22 @@ function draw() {
           drawTile(cogImage, x, y);
           break;
         case items.BOX_IN_HOLE:
-          drawTile(boxInHoleImage,x,y);
+          drawTile(boxInHoleImage, x, y);
           break;
         case items.WALL:
           drawTile(rockImage, x, y);
           break;
-        case items.BOX:
-          drawTile(boxImage, x, y);
-          break;
       }
     }
   }
+  // draw the enemy
   drawIfPresent(enemy, enemyImage);
+  // draw the boxes
+  boxes.forEach(e => {
+    drawIfPresent(e, boxImage);
+  })
   // draw the hero
-  drawTile(hero.dead ? skullImage : heroImage, hero.x, hero.y);
+  drawTile(hero.dead ? skullImage : heroImage, hero.ex, hero.ey);
 }
 
 function drawFloor(x, y) {
@@ -300,7 +362,7 @@ function isHole(x, y) {
 
 function drawIfPresent(item, img) {
   if (item) {
-    drawTile(img, item.x, item.y);
+    drawTile(img, item.ex, item.ey);
   }
 }
 

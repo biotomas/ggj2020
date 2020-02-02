@@ -1,7 +1,7 @@
 var hero;
 var level;
 var enemy;
-var coin;
+var boxes = [];
 
 
 const items = {
@@ -29,23 +29,25 @@ function die() {
 function loadLevel(levstr) {
 	// levstr = document.getElementById("customLevel").value
 	level = new Level(levstr);
+	anim.clearSprites();
 	var hloc = level.find(items.PLAYER);
 	level.grid[hloc.y][hloc.x] = items.FLOOR;
-	console.log(hloc);
 	hero = new Hero(hloc.x, hloc.y);
-	var cloc = level.find(items.COIN);
-	if (cloc) {
-		coin = new Coin(cloc.x, cloc.y);
-	} else {
-		coin = null;
-	}
+	anim.addSprite(hero);
 	var eloc = level.find(items.ENEMY);
 	if (eloc) {
 		enemy = new Spider(eloc.x, eloc.y);
 		level.grid[eloc.y][eloc.x] = items.FLOOR;
+		anim.addSprite(enemy);
 	} else {
 		enemy = null;
 	}
+	boxes = [];
+	level.findAll(items.BOX).forEach(e => {
+		var box = new Box(e.x,e.y);
+		boxes.push(box);
+		anim.addSprite(box)
+	});
 	bomb = null;
 }
 
@@ -70,29 +72,33 @@ function step(move) {
 		default:
 			return;
 	}
+	
 
 	if (hero.moveTo(gx, gy)) {
 		if (hero.update()) {
-			return;
+			return false;
 		}
 		if (enemy) {
 			var gex = enemy.x - gx + cx;
 			var gey = enemy.y - gy + cy;
 			enemy.moveTo(gex, gey);
 			if (enemy.update()) {
-				return;
+				return false;
 			}
 		}
-		if (hero.checkwin()) {
-			return;
-		}
+		return true;
 	}
+	return false;
 };
 
 class BaseGO {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
+		this.ex = x;
+		this.ey = y;
+		this.oldx = x;
+		this.oldy = y;
 	}
 
 	moveTo(x, y) {
@@ -102,9 +108,12 @@ class BaseGO {
 
 		var oldx = this.x;
 		var oldy = this.y;
+		this.oldx = oldx;
+		this.oldy = oldy;
 		var nextx = 2 * x - oldx;
 		var nexty = 2 * y - oldy;
 		var isPlayer = oldx == hero.x && oldy == hero.y;
+		var isEnemy = enemy && oldx == enemy.x && oldy == enemy.y;
 
 		const goalTile = level.grid[y][x];
 		// walk to other floor
@@ -141,6 +150,13 @@ class BaseGO {
 			level.grid[oldy][oldx] = items.FLOOR;
 			this.x = x;
 			this.y = y;
+			// find the box
+			boxes.forEach(e=>{
+				if (e.x == x && e.y == y) {
+					e.x = nextx;
+					e.y = nexty;
+				}
+			})
 			return true;
 		}
 		// push box to hole
@@ -150,6 +166,13 @@ class BaseGO {
 			level.grid[oldy][oldx] = items.FLOOR;
 			this.x = x;
 			this.y = y;
+			boxes.forEach(e=>{
+				if (e.x == x && e.y == y) {
+					e.x = nextx;
+					e.y = nexty;
+					e.removeBox = true;
+				}
+			})
 			return true;
 		}
 		return false;
@@ -163,13 +186,6 @@ class Hero extends BaseGO {
 		this.dead = false;
 		this.win = false;
 		this.hasPart = false;
-	}
-
-	checkwin() {
-		if (this.dead == false && coin && this.x == coin.x && this.y == coin.y) {
-			this.win = true;
-			return true;
-		}
 	}
 
 	update() {
@@ -197,7 +213,7 @@ class Spider extends BaseGO {
 
 }
 
-class Coin extends BaseGO {
+class Box extends BaseGO {
 	constructor(x, y) {
 		super(x, y)
 	}
@@ -224,6 +240,18 @@ class Level {
 				}
 			}
 		}
+	}
+
+	findAll(item) {
+		var result = [];
+		for (var y = 0; y < this.grid.length; y++) {
+			for (var x = 0; x < this.grid[y].length; x++) {
+				if (this.grid[y][x] == item) {
+					result.push({ x, y });
+				}
+			}
+		}
+		return result;
 	}
 
 	collapse(x, y) {
