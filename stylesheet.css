@@ -19,7 +19,7 @@ body {
     cursor: pointer;
 }
 
-.step_intro {
+.step_intro, step_outro {
     display: none;
 }
 
@@ -34,6 +34,18 @@ body {
     left: 15%;
     z-index: 1;
     animation: intro 4s ease-out 1s;
+    color: rgb(75, 213, 238);
+    font-weight: 400;
+    font-size: 500%;
+    opacity: 0;
+}
+
+.outro {
+    position: absolute;
+    top: 30%;
+    left: 15%;
+    z-index: 1;
+    animation: intro 4s ease-out 5s;
     color: rgb(75, 213, 238);
     font-weight: 400;
     font-size: 500%;
@@ -55,13 +67,29 @@ body {
     }
 }
 
+@keyframes outro {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
 .step_invitation p,
-.step_intro p {
+.step_intro p,
+.step_outro p{
     color: #FFFF82;
 }
 
 /* Set the font, lean the board, position it */
-#board {
+#board, #outroBoard {
     font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
     transform: perspective(300px) rotateX(25deg);
     transform-origin: 50% 100%;
@@ -77,7 +105,7 @@ body {
     left: 50%;
 }
 
-#board:after {
+#board:after, #outroBoard:after {
     position: absolute;
     content: ' ';
     bottom: 60%;
@@ -87,13 +115,13 @@ body {
 }
 
 /* Set the scrolling animation and position it */
-#content {
+#content, #outroContent {
     animation: scroll 100s linear 7s;
     position: absolute;
     top: 100%;
 }
 
-#title, #subtitle {
+#title, #subtitle, #outroTitle, #outroSubtitle {
     text-align: center;
 }
 
@@ -126,4 +154,8 @@ body {
     color: #FFFF82;
     font-size:16pt;
     font-family: "Nirmala UI";
+}
+
+.space_ship_container {
+    background-image: url("res/spaceship.png");
 }
