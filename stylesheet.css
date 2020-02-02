@@ -117,4 +117,5 @@ body {
 
 .step_running canvas {
     border:1px solid red;
+    margin-left: -15%;
 }

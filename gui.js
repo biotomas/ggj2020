@@ -207,6 +207,9 @@ function loadImage(src) {
 
 
 var canvas = document.getElementById("canvas");
+canvas.width = ((window.innerWidth * 70)/100);
+canvas.height = ((window.innerHeight * 55)/100);
+
 var c = canvas.getContext("2d");
 const gridSize = 120;
 var offx = 0;
