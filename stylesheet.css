@@ -19,7 +19,7 @@ body {
     cursor: pointer;
 }
 
-.step_intro, step_outro {
+.step_intro, .step_outro {
     display: none;
 }
 
