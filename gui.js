@@ -205,10 +205,9 @@ function loadImage(src) {
   return img;
 }
 
-
 var canvas = document.getElementById("canvas");
-canvas.width = ((window.innerWidth * 70)/100);
-canvas.height = ((window.innerHeight * 55)/100);
+canvas.width = ((window.innerWidth * 80)/100);
+canvas.height = ((window.innerHeight * 80)/100);
 
 var c = canvas.getContext("2d");
 const gridSize = 120;

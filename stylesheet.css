@@ -107,7 +107,6 @@ body {
 }
 
 .step_running {
-    width:1100px;
     margin: auto;
 }
 
@@ -117,5 +116,14 @@ body {
 
 .step_running canvas {
     border:1px solid red;
-    margin-left: -15%;
+}
+
+.level_editor {
+    display: none;
+}
+
+.instructions {
+    color: #FFFF82;
+    font-size:16pt;
+    font-family: "Nirmala UI";
 }

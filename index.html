@@ -28,19 +28,19 @@
     <div class="step_running">
       <audio id="mainSound" src="soundtracks/Main_Sound.mp3" loop="loop"></audio>
       <div>
-        <h1>Rescue of Providence</h1>
-        <p>Use arrows to move, "r" restarts the level. Repair defect Spaceship Providence and Save the Planet!</p>
+        <p class="instructions">Use arrows to move, "r" restarts the level. Repair defect Spaceship Providence and Save the Planet!</p>
         <canvas id="canvas" onclick="playMainSound()"></canvas>
-        <br>
-        Select Level to play:&nbsp;&nbsp;&nbsp;
-        <select id="levelSelect" onchange="selectLevel()">
-        </select>
-        <p>Level Editor:</p>
-        <div>
-          Offset X:<input id="offx" oninput="restartLevel()"></input>
-          Offset Y:<input id="offy" oninput="restartLevel()"></input>
+        <div class="level_editor">
+          Select Level to play:&nbsp;&nbsp;&nbsp;
+          <select id="levelSelect" onchange="selectLevel()">
+          </select>
+          <p>Level Editor:</p>
+          <div>
+            Offset X:<input id="offx" oninput="restartLevel()"></input>
+            Offset Y:<input id="offy" oninput="restartLevel()"></input>
+          </div>
+          <textarea id="customLevel" rows=10 cols=20 oninput="restartLevel()"></textarea>
         </div>
-        <textarea id="customLevel" rows=10 cols=20 oninput="restartLevel()"></textarea>
       </div>
     </div>
     <script src="levels.js"></script>
